@@ -18,11 +18,17 @@ dependencies {
 project.ext.lwjglVersion = "3.3.6"
 project.ext.jomlVersion = "1.10.7"
 project.ext.lwjglNatives = "natives-macos-arm64"
+project.ext.imguiVersion = '1.81.0'
 repositories {
     mavenCentral()
 }
 
 dependencies {
+
+    // ImGUI stuff
+    implementation "io.github.spair:imgui-java-app:$imguiVersion"
+
+    //LWJGL stuff
     implementation platform("org.lwjgl:lwjgl-bom:$lwjglVersion")
 
     implementation "org.lwjgl:lwjgl"

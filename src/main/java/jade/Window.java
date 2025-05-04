@@ -13,6 +13,7 @@ public class Window {
     private int height;
     private String title;
     private long glfwWindow;
+    private ImGuiLayer imguiLayer;
     // Only have one instance of a window
     private static Window window = null;
     public float r, g, b, a;
@@ -102,6 +103,10 @@ public class Window {
         glfwSetMouseButtonCallback(glfwWindow, MouseListener::mouseButtonCallback);
         glfwSetScrollCallback(glfwWindow, MouseListener::mouseScrollCallback);
         glfwSetKeyCallback(glfwWindow, KeyListener::keyCallback);
+        glfwSetWindowSizeCallback(glfwWindow, (w, newWidth, newHeight) ->{
+            Window.setWidth(newWidth);
+            Window.setHeight(newHeight);
+        });
         // Make the OpenGL context current
         glfwMakeContextCurrent(glfwWindow);
         // Enable v-sync, buffer swapping, no wait time between the frames, swap every frame
@@ -119,6 +124,9 @@ public class Window {
         // Enable blending in Open GL
         glEnable(GL_BLEND);
         glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+        this.imguiLayer = new ImGuiLayer(glfwWindow);
+        this.imguiLayer.initImGui();
+
 
         Window.changeScene(0);
     }
@@ -138,12 +146,25 @@ public class Window {
             if(dt >= 0){
                 currentScene.update(dt);
             }
-
+            this.imguiLayer.update(dt);
             glfwSwapBuffers(glfwWindow);
             endTime = (float)glfwGetTime();
             // Time between frames
             dt = endTime - beginTime;
             beginTime = endTime;
         }
+    }
+    public static int getWidth(){
+        return get().width;
+    }
+    public static int getHeight(){
+        return get().height;
+    }
+
+    public static void setWidth(int newWidth){
+        get().width = newWidth;
+    }
+    public static void setHeight(int newHeight){
+        get().height = newHeight;
     }
 }
