@@ -1,4 +1,12 @@
 package jade;
+import imgui.*;
+import imgui.callback.ImStrConsumer;
+import imgui.callback.ImStrSupplier;
+import imgui.flag.ImGuiBackendFlags;
+import imgui.flag.ImGuiConfigFlags;
+import imgui.flag.ImGuiKey;
+import imgui.flag.ImGuiMouseCursor;
+import imgui.gl3.ImGuiImplGl3;
 
 import static org.lwjgl.glfw.GLFW.*;
 
@@ -175,7 +183,12 @@ public class ImGuiLayer {
         // Method initializes LWJGL3 renderer.
         // This method SHOULD be called after you've initialized your ImGui configuration (fonts and so on).
         // ImGui context should be created as well.
-        imGuiGl3.init("#Version 330 core");
+        // ------------------------------------------------------------
+        // Fonts configuration (minimal default font)
+        ImGui.getIO().getFonts().addFontDefault();  // adds default font
+        ImGui.getIO().getFonts().build();           // builds the font atlas
+
+        imGuiGl3.init("#version 330 core");
     }
     public void update(float dt){
         startFrame(dt);
@@ -210,12 +223,12 @@ public class ImGuiLayer {
     private void endFrame() {
         // After Dear ImGui prepared a draw data, we use it in the LWJGL3 renderer.
         // At that moment ImGui will be rendered to the current OpenGL context.
-        imGuiGl3.render(ImGui.getDrawData());
+        imGuiGl3.renderDrawData(ImGui.getDrawData());
     }
 
     // If you want to clean a room after yourself - do it by yourself
     private void destroyImGui() {
-        imGuiGl3.dispose();
+        imGuiGl3.shutdown();
         ImGui.destroyContext();
     }
 }
